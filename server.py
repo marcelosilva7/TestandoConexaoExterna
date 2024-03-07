@@ -24,4 +24,3 @@ def listar_cpf(cpf: str):
                             detail='CPF não encontrado')
 
     return cpf_achado
- 
