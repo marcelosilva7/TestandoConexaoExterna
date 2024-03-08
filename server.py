@@ -11,7 +11,7 @@ app = FastAPI()
 def home():
     return {"message": "Você está no começo"}
 
-@app.get("/aniversario/{cpf}")
+@app.get("/cpf/{cpf}")
 def listar_cpf(cpf: str):
     cpf_achado = None  # Inicializa cpf_achado antes do loop
     for item in lista:
