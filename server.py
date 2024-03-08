@@ -1,8 +1,8 @@
 from fastapi import FastAPI, HTTPException, status
 
 lista = [
-    {"cpf": "12345678911", "nome": "rodolfo", "nomeMae": "maria", "nascimento": "10/10/2001"},
-    {"cpf": "98765432199", "nome": "joao", "nomeMae": "joaquina", "nascimento": "09/09/2002"}
+    {"cpf": "12345678911", "nome": "rodolfo", "nomemae": "maria", "nascimento": "10/10/2001"},
+    {"cpf": "98765432199", "nome": "joao", "nomemae": "joaquina", "nascimento": "09/09/2002"}
 ]
 
 app = FastAPI()
