@@ -1,22 +1,27 @@
 from fastapi import FastAPI, Request, Response, status, HTTPException
 from starlette.middleware.base import BaseHTTPMiddleware
+from starlette.responses import JSONResponse
 
 import os
 
-allowed_ip = os.getenv("IP_PERMITIDO")
-
-class OnlyOneIPMiddleware(BaseHTTPMiddleware):
-    def __init__(self, app, allowed_ip: str):
-        super().__init__(app)
-        self.allowed_ip = allowed_ip
-
+class AuthTokenMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
-        client_ip = request.client.host
-        if client_ip == self.allowed_ip:
-            return await call_next(request)
-        return Response(content="Acesso negado.", status_code=status.HTTP_403_FORBIDDEN)
-
-
+        # Retrieve the expected token here, directly within the middleware
+        expected_token = os.getenv("TOKEN_ACCESS")
+        authorization: str = request.headers.get("Authorization")
+        if authorization:
+            scheme, _, token = authorization.partition(' ')
+            if scheme.lower() == 'bearer' and token == expected_token:
+                return await call_next(request)
+            else:
+                return JSONResponse(
+                    status_code=status.HTTP_401_UNAUTHORIZED,
+                    content={"detail": "Invalid or missing authentication token"}
+                )
+        return JSONResponse(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            content={"detail": "Authorization header is required"}
+        )
 
 lista = [
 
@@ -26,7 +31,7 @@ lista = [
 ]
 
 app = FastAPI()
-app.add_middleware(OnlyOneIPMiddleware, allowed_ip=allowed_ip)
+app.add_middleware(AuthTokenMiddleware)
 
 
 @app.get("/")
