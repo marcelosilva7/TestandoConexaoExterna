@@ -26,6 +26,8 @@ lista = [
 ]
 
 app = FastAPI()
+app.add_middleware(OnlyOneIPMiddleware, allowed_ip=allowed_ip)
+
 
 @app.get("/")
 def home():
